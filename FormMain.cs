@@ -1,15 +1,8 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
-using System.Drawing;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Windows.Forms;
+using System.Diagnostics;
 using System.IO;
+using System.Windows.Forms;
 using System.Xml;
-using System.Xml.Serialization;
 
 namespace DbmlToClass
 {
@@ -53,7 +46,7 @@ namespace DbmlToClass
 
             if (!Directory.Exists(textBoxOutputFolder.Text))
             {
-                if (MessageBox.Show("The specified output folder could not be located. Do you want to create it?") == DialogResult.Yes)
+                if (MessageBox.Show("The specified output folder could not be located. Do you want to create it?", "Action", MessageBoxButtons.YesNo) == DialogResult.Yes)
                 {
                     try
                     {
@@ -95,7 +88,7 @@ namespace DbmlToClass
 
                         classText += "using System;" + "\r\n";
                         classText += "" + "\r\n";
-                        classText += "namespace TemporaryNamespace" + "\r\n";
+                        classText += "namespace " + txtNameSpace.Text + "\r\n";
                         classText += "{" + "\r\n";
                         classText += "    public class " + typeName + "\r\n";
                         classText += "    {" + "\r\n";
@@ -105,6 +98,11 @@ namespace DbmlToClass
                             if (columnNode.Name == "Column")
                             {
                                 Type type = Type.GetType(columnNode.Attributes["Type"].Value);
+
+                                // if type is null?
+                                if (type == null)
+                                    type = Type.GetType("System.String");
+
                                 bool isNullable = bool.Parse(columnNode.Attributes["CanBeNull"].Value) && type.IsValueType;
                                 string name = columnNode.Attributes["Name"].Value;
 
@@ -122,6 +120,7 @@ namespace DbmlToClass
             }
 
             MessageBox.Show("Done!");
+            Process.Start(textBoxOutputFolder.Text);    
         }
     }
 }
