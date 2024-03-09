@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Diagnostics;
 using System.IO;
 using System.Windows.Forms;
 using System.Xml;
@@ -87,7 +88,7 @@ namespace DbmlToClass
 
                         classText += "using System;" + "\r\n";
                         classText += "" + "\r\n";
-                        classText += "namespace TemporaryNamespace" + "\r\n";
+                        classText += "namespace " + txtNameSpace.Text + "\r\n";
                         classText += "{" + "\r\n";
                         classText += "    public class " + typeName + "\r\n";
                         classText += "    {" + "\r\n";
@@ -119,6 +120,7 @@ namespace DbmlToClass
             }
 
             MessageBox.Show("Done!");
+            Process.Start(textBoxOutputFolder.Text);    
         }
     }
 }
